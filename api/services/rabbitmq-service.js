@@ -1,33 +1,17 @@
 const amqp = require('amqplib')
 
 class RabbitMQService {
-  constructor (url) {
+  constructor (url, channel) {
     this.url = url
     this.channel = null
   }
 
-  async setup () {
-    console.log('setting up Rabbit MQ exchanges/queues')
-    let connection = await amqp.connect(this.url)
+  async setup () {}
 
-    // create a channel
-    this.channel = await connection.createChannel()
+  async publish ({ routingKey, exchangeName, data }) {
+    const connection = await amqp.connect(this.url)
+    const channel = await connection.createConfirmChannel()
 
-    // create exchange
-    await this.channel.assertExchange('processing', 'direct', { durable: true })
-
-    // create queues
-    await this.channel.assertQueue('processing.requests', { durable: true })
-    await this.channel.assertQueue('processing.results', { durable: true })
-
-    // bind queues
-    await this.channel.bindQueue('processing.requests', 'processing', 'request')
-    await this.channel.bindQueue('processing.results', 'processing', 'result')
-
-    console.log('Setup DONE')
-  }
-
-  async publish (channel, { routingKey, exchangeName, data }) {
     await channel.publish(
       exchangeName,
       routingKey,
