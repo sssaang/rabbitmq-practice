@@ -46,16 +46,14 @@ function consume ({ connection, channel, resultsChannel }) {
 
       // don't send message until ack is called
       await channel.prefetch(1)
-      setTimeout(async () => {
-        // acknowledge message as received
-        console.log(
-          'Received a result message, requestId:',
-          requestId,
-          'processingResults:',
-          processingResults
-        )
-        await channel.ack(msg)
-      }, 5000)
+      console.log(
+        'Received a result message, requestId:',
+        requestId,
+        'processingResults:',
+        processingResults
+      )
+
+      await channel.ack(msg)
     })
 
     // handle connection closed
