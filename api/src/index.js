@@ -31,7 +31,7 @@ app.post('/api/v1/processData', async (req, res) => {
   })
 })
 
-const PORT = 3000
+const PORT = 4000
 const server = http.createServer(app)
 server.listen(PORT, 'localhost', err => {
   if (err) {
