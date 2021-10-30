@@ -8,7 +8,7 @@ class RabbitMQService {
 
   async setup () {
     console.log('setting up Rabbit MQ exchanges/queues')
-    let connection = await amqp.connect(messageQueueConnectionString)
+    let connection = await amqp.connect(this.url)
 
     // create a channel
     this.channel = await connection.createChannel()
