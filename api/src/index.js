@@ -3,7 +3,7 @@ import http from 'http'
 import './mq/init'
 import RabbitMQService from './services/rabbitmq-service'
 
-const mqService = new RabbitMQService('amqp://localhost')
+const mqService = new RabbitMQService(process.env.RABBIT_MQ_URL)
 const app = express()
 
 app.use(express.urlencoded({ extended: true }))
