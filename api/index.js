@@ -7,7 +7,9 @@ import './mq/init'
 // const mqService = new RabbitMQService('amqp://localhost')
 const app = express()
 
-app.post('/api/v1/processData', async (req, res) => {})
+app.post('/api/v1/processData', async (req, res) => {
+  res.status(200).send('hi')
+})
 
 const PORT = 3000
 const server = http.createServer(app)

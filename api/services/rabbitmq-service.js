@@ -1,7 +1,7 @@
-const amqp = require('amqplib')
+import amqp from 'amqplib'
 
 class RabbitMQService {
-  constructor (url, channel) {
+  constructor (url) {
     this.url = url
     this.channel = null
   }
