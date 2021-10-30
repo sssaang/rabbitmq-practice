@@ -14,12 +14,12 @@ async function setup () {
   })
 
   // create queues
-  await channel.assertQueue(process.env.REQUEST_QUEUE, { durable: true })
+  await channel.assertQueue(process.env.REQUESTS_QUEUE, { durable: true })
   await channel.assertQueue(process.env.RESULTS_QUEUE, { durable: true })
 
   // bind queues
   await channel.bindQueue(
-    process.env.REQUEST_QUEUE,
+    process.env.REQUESTS_QUEUE,
     process.env.EXCHANGE_NAME,
     process.env.REQUESTS_ROUTING
   )
@@ -37,23 +37,24 @@ async function setup () {
 
 function consume ({ connection, channel, resultsChannel }) {
   return new Promise((resolve, reject) => {
-    channel.consume(process.env.RESULTS_QUEUE, async function (msg) {
+    channel.consume(process.env.RESULTS_QUEUE, async msg => {
       // parse message
       let msgBody = msg.content.toString()
       let data = JSON.parse(msgBody)
       let requestId = data.requestId
       let processingResults = data.processingResults
-      console.log(
-        'Received a result message, requestId:',
-        requestId,
-        'processingResults:',
-        processingResults
-      )
+
       // don't send message until ack is called
       await channel.prefetch(1)
-      setTimeout(() => {
+      setTimeout(async () => {
         // acknowledge message as received
-        channel.ack(msg)
+        console.log(
+          'Received a result message, requestId:',
+          requestId,
+          'processingResults:',
+          processingResults
+        )
+        await channel.ack(msg)
       }, 5000)
     })
 
