@@ -9,11 +9,7 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
-  waitforrabbit:
-    image: dadarek/wait-for-dependencies
-    depends_on:
-      - rabbitmq 
-    command: rabbitmq:5672
+
   api:
     build: 
       context: ./api
@@ -22,13 +18,9 @@ services:
       - '4000'
     ports:
       - '4000:4000'
-    depends_on: 
-      - waitforrabbit
     command: 'node dist/index.js'
 
   processor:
     build:
       context: ./processor
-    depends_on: 
-      - waitforrabbit
     command: 'node dist/index.js'
