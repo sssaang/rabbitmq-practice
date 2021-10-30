@@ -31,8 +31,6 @@ async function setup () {
 
   console.log('Rabbit MQ Setup DONE')
 
-  await channel.prefetch(1)
-
   // start consuming messages
   await consume({ connection, channel })
 }
@@ -51,9 +49,12 @@ function consume ({ connection, channel, resultsChannel }) {
         'processingResults:',
         processingResults
       )
-
-      // acknowledge message as received
-      await channel.ack(msg)
+      // don't send message until ack is called
+      await channel.prefetch(1)
+      setTimeout(() => {
+        // acknowledge message as received
+        channel.ack(msg)
+      }, 5000)
     })
 
     // handle connection closed
